@@ -479,6 +479,27 @@ SR_{calc}=\frac{I_5}{C_C}=\frac{\SI{18}{\micro A}}{\SI{3.6}{pF}}
 \end{equation}
 From the derivative plot supplied during simulation, the negative slew marker is approximately \SI{-3.97}{V/\micro s}, while the positive edge is approximately \SI{4.7}{V/\micro s}. These values are slightly below the ideal calculation because part of the available current charges internal capacitances and because the output stage is not an ideal current source. For final sign-off, the derivative plot should be saved with both positive and negative flat-slope markers visible.
 
+\chapter{Physical Layout}
+
+\section{Full-custom implementation}
+The amplifier was implemented as a full-custom layout in the GPDK090 process. The placement follows the schematic signal flow: the PMOS current-mirror load and the PMOS second-stage device are located near the upper supply rail, while the NMOS differential pair, tail source, bias transistor, and output sink are placed toward the lower supply rail. Wide horizontal rails distribute $V_{DD}$ and $V_{SS}$, and the first-stage output is routed to the gate of M6 and to the Miller compensation connection.
+
+\figwide[0.76\textwidth]{layout.png}{Full-custom layout of the two-stage Miller-compensated CMOS operational amplifier.}
+
+Matched devices should use identical orientation, equal surroundings, and symmetric routing wherever possible. In particular, M1--M2 and M3--M4 form the critical matched pairs. The bias routing should be kept away from the output node, while the high-impedance first-stage node should be short and shielded from large-swing interconnects to reduce parasitic coupling.
+
+\section{Extracted-layout view}
+Figure~\ref{fig:av-extracted} shows the layout view used for extraction and connectivity inspection. The visible device and net annotations provide a direct check that the implemented topology corresponds to the eight-transistor schematic before post-layout simulation.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.86\textwidth]{av_extracted.png}
+  \caption{Extracted/annotated layout view used for connectivity verification.}
+  \label{fig:av-extracted}
+\end{figure}
+
+The two images document the physical implementation, but they do not by themselves prove layout correctness. Final physical verification should include a clean design-rule check (DRC), layout-versus-schematic comparison (LVS), and post-layout extraction (PEX). The extracted netlist should then be re-simulated for dc gain, unity-gain frequency, phase margin, settling time, slew rate, CMRR, and PSRR so that parasitic-induced degradation can be quantified.
+
 \chapter{Results and Discussion}
 
 \section{Specification summary}
